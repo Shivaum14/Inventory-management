@@ -3,22 +3,40 @@ import { PropTypes } from "prop-types";
 import { useState } from "react";
 import Info, { Info1 } from "./Info.js"; //imports default and non default
 import SearchBar from "./SearchBar.js";
+import AddItem from "./AddItem.js";
+import ItemsDisplay from "./ItemsDisplay.js";
 
 function App() {
-	const [data, setData] = useState({});
+	const [filters, setFilters] = useState({});
+	const [data, setData] = useState({ items: [] });
 
-	const updateData = (searchParams) => {
-		setData(searchParams);
+	const updateFilters = (searchParams) => {
+		setFilters(searchParams);
 	};
+
+	const AddItemToData = (item) => {
+		let items = data["items"];
+		item.id = items.length;
+		items.push(item);
+		setData({ items: items });
+		console.log(data);
+	};
+
 	return (
 		<div className="App">
 			<Info1 />
 			<br />
-			<SearchBar callback={updateData} />
-			<p>Name: {"name" in data ? data["name"] : "No Data to display"}</p>
-			<p>Max Price: {"price" in data ? data["price"] : "No Data to display"}</p>
-			<p>Type: {"type" in data ? data["type"] : "No Data to display"}</p>
-			<p>Brand: {"brand" in data ? data["brand"] : "No Data to display"}</p>
+			<SearchBar updateSearchParams={updateFilters} />
+			<p>Name: {"name" in filters ? filters["name"] : "No Data to display"}</p>
+			<p>Max Price: {"price" in filters ? filters["price"] : "No Data to display"}</p>
+			<p>Type: {"type" in filters ? filters["type"] : "No Data to display"}</p>
+			<p>Brand: {"brand" in filters ? filters["brand"] : "No Data to display"}</p>
+			<br />
+			<br />
+			<AddItem addItem={AddItemToData} />
+			<br />
+			<br />
+			<ItemsDisplay items={data["items"]} />
 			<br />
 			<br />
 			<Info title="Inventory Management" />
@@ -27,9 +45,9 @@ function App() {
 			<ButtonState />
 			<br />
 			<br />
-			<AddItem text="Shiv" number={14} />
+			<AddItem2 text="Shiv" number={14} />
 			<br />
-			<AddItem />
+			<AddItem2 />
 			<br />
 			<br />
 		</div>
@@ -64,7 +82,7 @@ function Data(props) {
 	);
 }
 
-function AddItem(props) {
+function AddItem2(props) {
 	const value = props.text;
 	return (
 		<form>
@@ -76,13 +94,13 @@ function AddItem(props) {
 }
 
 //defines default props
-AddItem.defaultProps = {
+AddItem2.defaultProps = {
 	number: 2,
 	text: "<-------->",
 };
 
 //defines default datatypes for props
-AddItem.propTypes = {
+AddItem2.propTypes = {
 	number: PropTypes.number,
 };
 
