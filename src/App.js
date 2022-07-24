@@ -1,17 +1,40 @@
 import "./App.css";
 import { PropTypes } from "prop-types";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Info, { Info1 } from "./Info.js"; //imports default and non default
 import SearchBar from "./SearchBar.js";
+import Test from "./Class.js";
 import AddItem from "./AddItem.js";
 import ItemsDisplay from "./ItemsDisplay.js";
 
 function App() {
 	const [filters, setFilters] = useState({});
 	const [data, setData] = useState({ items: [] });
+	const [showTest, setShowTest] = useState(true);
+
+	useEffect(() => {
+		fetch("http://localhost:3000/items")
+			.then((response) => response.json())
+			.then((data) => setData({ items: data }));
+	}, []);
 
 	const updateFilters = (searchParams) => {
 		setFilters(searchParams);
+	};
+
+	const deleteItem = (item) => {
+		const items = data["items"];
+		const requestOptions = {
+			method: "DELETE",
+		};
+		fetch(`http://localhost:3000/items/${item.id}`, requestOptions).then((response) => {
+			if (response.ok) {
+				console.log("dsddddddddddddddddddd");
+				const idx = items.indexOf(item);
+				items.splice(idx, 1);
+				setData({ items: items });
+			}
+		});
 	};
 
 	const AddItemToData = (item) => {
@@ -61,6 +84,7 @@ function App() {
 
 	return (
 		<div className="App">
+			{showTest ? <Test destroy={setShowTest} /> : null}
 			<Info1 />
 			<br />
 			<SearchBar updateSearchParams={updateFilters} />
@@ -73,7 +97,7 @@ function App() {
 			<AddItem addItem={AddItemToData} />
 			<br />
 			<br />
-			<ItemsDisplay items={filterData(data["items"])} />
+			<ItemsDisplay deleteItem={deleteItem} items={filterData(data["items"])} />
 			<br />
 			<br />
 			<Info title="Inventory Management" />

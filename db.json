@@ -1,13 +1,6 @@
 {
   "items": [
     {
-      "id": 0,
-      "name": "test"
-    },
-    {
-      "id": 1
-    },
-    {
       "name": "apple",
       "price": "056",
       "type": "apple",
